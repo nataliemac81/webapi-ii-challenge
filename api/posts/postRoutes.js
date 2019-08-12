@@ -2,8 +2,18 @@ const express = require('express')
 
 const router = express.Router()
 
+const db = require('../../data/db')
+
 router.get('/', (req, res) => {
-  res.status(200).send('hello from the GET /posts endpoint')
+  db.find()
+  .then(posts => {
+	res.status(200).json(posts)
+  })
+  .catch(err => {
+	res.status(500).json({
+		err: err
+	})
+  })
 })
 
 router.get('/:id', (req, res) => {
