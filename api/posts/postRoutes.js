@@ -62,7 +62,25 @@ router.get('/:id/comments', (req, res) => {
 })
 
 router.post('/', (req,res) => {
-	res.status(200).send('hello from the POST /posts endpoint')
+	const newPost = req.body
+	console.log(newPost)
+	db.insert(newPost)
+		.then(post => {
+			if (!newPost.title || !newPost.contents) {
+				res.status(400).json({
+					message: "Please provide title and contents for the post."
+				})
+			} else {
+				res.status(201).json(post)
+				console.log(post)
+			}				
+		})
+		.catch(err => {
+			res.status(500).json({
+				err: err,
+				message: 'There was an error while saving the user to the database'
+			})
+		})
 })
 
 router.post('/:id/comments', (req,res) => {
