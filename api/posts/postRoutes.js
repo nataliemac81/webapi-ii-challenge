@@ -38,8 +38,27 @@ router.get('/:id', (req, res) => {
 	})
 })
 
+
 router.get('/:id/comments', (req, res) => {
-	res.status(200).send('hello from the GET /posts/:id/comments endpoint')
+	const { id } = req.params
+	const postId = id
+	
+	db.findPostComments(postId)
+	.then(comments => {
+		if(postId) {
+			res.status(200).json(comments)
+		} else {
+			res.status(404).json({
+				message: "The post with the specified ID does not exist."
+			})
+		}
+	})
+	.catch(err => {
+		res.status(500).json({
+			err: err,
+			message: "The comments information could not be retrieved."
+		})
+	})
 })
 
 router.post('/', (req,res) => {
