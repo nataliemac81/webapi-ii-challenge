@@ -63,17 +63,16 @@ router.get('/:id/comments', (req, res) => {
 
 router.post('/', (req,res) => {
 	const newPost = req.body
-	console.log(newPost)
+	const title = newPost.title
+	const contents = newPost.contents
+	if (!title || !contents) {
+		res.status(400).json({
+			message: "Please provide title and contents for the post."
+		})
+	}
 	db.insert(newPost)
 		.then(post => {
-			if (!newPost.title || !newPost.contents) {
-				res.status(400).json({
-					message: "Please provide title and contents for the post."
-				})
-			} else {
-				res.status(201).json(post)
-				console.log(post)
-			}				
+			res.status(201).json(post)
 		})
 		.catch(err => {
 			res.status(500).json({
